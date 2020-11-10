@@ -1,0 +1,15 @@
+<svg id="Icon_Search_Filled" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <rect id="Box" class="cls-1" width="60" height="60"/>
+  <path id="Icon_Search"  class="cls-2" d="M40,43.728h0L27.5,31.25V29.27l-.69-.685a16.32,16.32,0,1,1,1.767-1.771l.69.685h1.986L43.725,40,40,43.727ZM16.251,5A11.249,11.249,0,1,0,27.5,16.249,11.262,11.262,0,0,0,16.251,5Z" transform="translate(7.499 7.5)"/>
+</svg>

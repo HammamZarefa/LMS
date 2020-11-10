@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "787470094102",
+    "firebase_url": "https://masterstudy-app.firebaseio.com",
+    "project_id": "masterstudy-app",
+    "storage_bucket": "masterstudy-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787470094102:android:5349b4d65a5ad432844a37",
+        "android_client_info": {
+          "package_name": "com.stylemixthemes.masterstudyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "787470094102-8un268jd46hbsmu4q9eg2uf0ed7humhn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxF3ldM-OC2kXwH83ZlFQfpnxAF65Q2Us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "787470094102-8un268jd46hbsmu4q9eg2uf0ed7humhn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

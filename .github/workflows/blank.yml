@@ -1,0 +1,129 @@
+name: Flutter CI
+
+# This workflow is triggered on pushes to the repository.
+
+on: [push]
+    
+# on: push    # Default will running for every branch.
+    
+jobs:
+  Flutter-Test:
+    # This job will run on ubuntu virtual machine
+    name: Run flutter test and fromat and analyze
+    runs-on: ubuntu-latest
+    steps:
+    
+    # Setup Java environment in order to build the Android app.
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    
+    # Setup the flutter environment.
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'beta' # 'dev', 'alpha', default to: 'stable'
+        # flutter-version: '1.12.x' # you can also specify exact version of flutter
+    
+    # Get flutter dependencies.
+    - run: flutter pub get
+    
+    # Check for any formatting issues in the code.
+  #  - run: flutter format --set-exit-if-changed .
+    
+    # Statically analyze the Dart code for any errors.
+ #   - run: flutter analyze .
+    
+    # Run widget tests for our flutter project.
+    - run: flutter test
+      
+#   Build-APK:
+#     # Build apk.
+#       name: Build-apk
+#       needs: [Flutter-Test]
+#       runs-on: ubuntu-latest
+#       steps:
+#         - uses: actions/checkout@v2
+#         - uses: actions/setup-java@v1
+#           with:
+#             java-version: "12.x"
+#         - uses: subosito/flutter-action@v1
+#           with:
+#            channel: "beta"
+#         - run: flutter pub get
+#   - run: flutter clean      
+    - name: Configure Keystore
+      run: |
+          cd ./android
+          echo "$ANDROID_KEYSTORE_FILE" > keystore.jks.b64
+          base64 -d -i keystore.jks.b64 > keystore.jks
+          echo "storeFile=../keystore.jks" > keystore.properties
+          echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> keystore.properties
+          echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> keystore.properties
+          echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> keystore.properties
+          ls
+      env: 
+          ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
+    - name: Release APK    
+      run: flutter build apk
+    # Upload generated apk to the artifacts.
+    - uses: actions/upload-artifact@v1
+      with:
+         name: release-apk
+         path: build/app/outputs/apk/release/app-release.apk 
+      
+    - name: Create service_account.json
+      id: createServiceAccount
+      run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
+    
+    - name: Create Google Play Config file
+      run : |
+          cd ./anime-flutter/anime_galaxy/android
+          echo "$PLAY_CONFIG_JSON" >> play_config.json.b64
+          base64 -d -i play_config.json.b64 > play_config.json
+          ls
+      env:
+          PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }} 
+    - name: C    reate Google Play Config file
+      run : |
+          cd ./anime-flutter/anime_galaxy/android
+          echo "$PLAY_CONFIG_JSON" >> play_config.json.b64
+          base64 -d -i play_config.json.b64 > play_config.json
+          ls
+      env:
+          PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }}  
+          
+          
+    - name: Deploy to Play Store (BETA)
+      id: deploy
+      uses: r0adkll/upload-google-play@v1
+      with:
+       serviceAccountJson: service_account.json
+       packageName: com.package
+       releaseFile: app/build/outputs/bundle/release/app-release.aab
+       track: beta
+       whatsNewDirectory: whatsnew/ 
+#   Build-IOS:    
+#     # Build IOS.
+#       name: Build-IOS
+#       needs: [Flutter-Test]
+#       runs-on: macos-latest
+#       steps:
+#         - uses: actions/checkout@v2
+#         - uses: actions/setup-java@v1
+#           with:
+#             java-version: "12.x"
+#         - uses: subosito/flutter-action@v1
+#           with:
+#            channel: "beta"
+#         - run: flutter pub get
+#         - run: flutter clean      
+#         - run: flutter build ios
+#     # Upload generated apk to the artifacts.
+#         - uses: actions/upload-artifact@v1
+#           with:
+#              name: release-apk
+#              path: build/app/outputs/apk/release/app-release.apk
